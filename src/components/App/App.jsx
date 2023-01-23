@@ -1,31 +1,42 @@
+import { useEffect } from 'react';
 import { Section } from 'components/Section/Section';
 import { Forms } from 'components/Forms/Forms';
 import { Contacts } from 'components/Contacts/Contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from 'redux/filterSlice';
-import { addContact, deleteContact } from 'redux/contactsSlice';
+import { fetchContacts, addContact, deleteContact } from 'redux/requests';
 
 export const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
 
   const filterContacts = contacts?.length
     ? contacts.filter(contact => contact.name.toLowerCase().includes(filter))
     : [];
 
-  const addCont = data => {
+  async function addCont(data) {
     if (contacts.length && contacts.find(item => item.name === data.name))
       return alert(
         'Are you sure about that? "' + data.name + '" is already in contacts.'
       );
 
-    dispatch(addContact(data));
-  };
+    await dispatch(addContact(data));
+    dispatch(fetchContacts());
+  }
 
-  const selectedContacts = text => dispatch(setFilter(text));
+  function selectedContacts(text) {
+    dispatch(setFilter(text));
+  }
 
-  const deleteCont = id => dispatch(deleteContact(id));
+  async function deleteCont(id) {
+    await dispatch(deleteContact(id));
+    dispatch(fetchContacts());
+  }
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Section>

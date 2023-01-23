@@ -11,9 +11,9 @@ export const Contacts = ({ contacts, onSearch, onDelete }) => {
 
       <ul>
         {contacts.map(contact => (
-          <li key={contact.id}>
+          <li key={contact.id} id={contact.id}>
             <span>{contact.name}</span>
-            <span>{contact.number}</span>
+            <span>{contact.phone}</span>
             <button type="button" onClick={() => onDelete(contact.id)}>
               Delete
             </button>
@@ -29,7 +29,7 @@ Contacts.propTypes = {
     propTypes.shape({
       id: propTypes.string.isRequired,
       name: propTypes.string.isRequired,
-      number: propTypes.string.isRequired,
+      phone: propTypes.string.isRequired,
     })
   ).isRequired,
 };
